@@ -38,25 +38,52 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  return res.send(JSON.stringify(books, null, 4));
+    let myPromise = new Promise((resolve,reject) => {
+        resolve(books)
+    })
+    myPromise.then(book => {
+        console.log("from pormise" , book)
+        return res.send(JSON.stringify(book, null, 4));
+    })
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  const book = books[req.params.isbn];
-  return res.send(book);
+    let myPromise = new Promise((resolve,reject) => {
+        const book = books[req.params.isbn];
+        resolve(book)
+    })
+    myPromise.then(book => {
+        return res.send(book);
+    }).error( ()=> {
+        res.status(404).json("not found")
+    })
 });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
-   const book = Object.values(books).filter( book => book.author.toLowerCase() === req.params.author)
-  return res.send(book);
+    let myPromise = new Promise((resolve,reject) => {
+        const book = Object.values(books).filter( book => book.author.toLowerCase() === req.params.author)
+        resolve(book)
+    })
+    myPromise.then(book => {
+        return res.send(book);
+    }).error( ()=> {
+        res.status(404).json("not found")
+    })
 });
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  const book = Object.values(books).filter( book => book.title.toLowerCase() === req.params.title.toLowerCase())
-  return res.send(book);
+    let myPromise = new Promise((resolve,reject) => {
+        const book = Object.values(books).filter( book => book.title.toLowerCase() === req.params.title.toLowerCase())
+        resolve(book)
+    })
+    myPromise.then(book => {
+        return res.send(book);
+    }).error( ()=> {
+        res.status(404).json("not found")
+    })
 });
 
 //  Get book review
